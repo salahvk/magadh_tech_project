@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:magadh_tech/controllers/text_controllers.dart';
 import 'package:magadh_tech/presentation/screens/otp_screen.dart';
 import 'package:magadh_tech/utils/color_manager.dart';
 import 'package:magadh_tech/utils/style_manager.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-
 
 class PhoneNumberScreen extends StatefulWidget {
   const PhoneNumberScreen({Key? key}) : super(key: key);
@@ -17,23 +17,23 @@ class PhoneNumberScreen extends StatefulWidget {
 class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   bool loading = false;
   bool isChecked = false;
-  TextEditingController numController = TextEditingController();
   var focusNode = FocusNode();
 
   void getOtp() {
-    if (numController.text.isEmpty || numController.text.length < 10) {
-     
-                 showTopSnackBar(
-    Overlay.of(context),
-     const SizedBox(height: 50,
-       child: CustomSnackBar.error(
-        icon: Icon(Icons.phone_android),iconPositionLeft:20,
-        iconPositionTop: -25,
-      message:
-          "Please enter a valid number!",
-         ),
-     ),
-);
+    final phoneNo = PhoneNoController.phoneController.text;
+    if (phoneNo.isEmpty || phoneNo.length < 10) {
+      showTopSnackBar(
+        Overlay.of(context),
+        const SizedBox(
+          height: 50,
+          child: CustomSnackBar.error(
+            icon: Icon(Icons.phone_android),
+            iconPositionLeft: 20,
+            iconPositionTop: -25,
+            message: "Please enter a valid number!",
+          ),
+        ),
+      );
       return;
     }
     Navigator.push(context, MaterialPageRoute(builder: (ctx) {
@@ -108,7 +108,7 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 8.0),
                                 child: TextField(
-                                  controller: numController,
+                                  controller: PhoneNoController.phoneController,
                                   keyboardType: TextInputType.number,
                                   focusNode: focusNode,
                                   maxLength: 10,
