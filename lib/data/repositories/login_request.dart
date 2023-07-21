@@ -52,7 +52,8 @@ class LoginImp implements MagadhServices {
   @override
   Future<Either<MainFailure, UsersListModel>> getUsers() async {
     try {
-      final url = Uri.parse(users);
+      final pageNo = HomeController.pageController.text;
+      final url = Uri.parse("$users?page=$pageNo");
       final headers = {
         'Content-Type': 'application/json',
         'Authorization':

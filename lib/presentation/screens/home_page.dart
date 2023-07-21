@@ -1,7 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:magadh_tech/controllers/text_controllers.dart';
 import 'package:magadh_tech/data/providers/data_provider.dart';
+import 'package:magadh_tech/data/repositories/login_request.dart';
 import 'package:magadh_tech/utils/color_manager.dart';
 import 'package:magadh_tech/utils/style_manager.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     await Future.delayed(const Duration(milliseconds: 1000));
+    HomeController.pageController.text = _currentPage.toString();
+    await LoginImp(context: context).getUsers();
     // FetchEmployeesData.getData(context, page: _currentPage);
     if (mounted) {
       setState(() {});
