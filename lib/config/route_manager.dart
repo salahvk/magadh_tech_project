@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:magadh_tech/presentation/screens/home_page.dart';
 import 'package:magadh_tech/presentation/screens/landing_screen.dart';
 import 'package:magadh_tech/presentation/screens/otp_screen.dart';
 import 'package:magadh_tech/presentation/screens/phone_number_screen.dart';
@@ -10,7 +10,7 @@ class Routes {
   static const String landingScreen = '/landingScreen';
   static const String phoneNoScreen = '/phoneNoScreen';
   static const String otpScreen = '/otpScreen';
-
+  static const String homeScreen = '/homeScreen';
 }
 
 class RouteGenerator {
@@ -21,10 +21,11 @@ class RouteGenerator {
       case Routes.landingScreen:
         return MaterialPageRoute(builder: (_) => const LandingScreen());
       case Routes.phoneNoScreen:
-        return MaterialPageRoute(builder: (_) => const PhoneNumberScreen());  
+        return MaterialPageRoute(builder: (_) => const PhoneNumberScreen());
       case Routes.otpScreen:
         return MaterialPageRoute(builder: (_) => const OtpScreen());
-    
+      case Routes.homeScreen:
+        return FadePageRoute(page: const HomeScreen());
       default:
         return unDefinedRoute();
     }

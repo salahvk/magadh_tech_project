@@ -1,16 +1,18 @@
-
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:magadh_tech/config/route_manager.dart';
+import 'package:magadh_tech/data/repositories/login_request.dart';
+import 'package:magadh_tech/utils/asset_manager.dart';
 import 'package:magadh_tech/utils/color_manager.dart';
 import 'package:magadh_tech/utils/style_manager.dart';
 import 'package:multi_state_button/multi_state_button.dart';
 import 'package:pinput/pinput.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 
-
 class OtpScreen extends StatefulWidget {
- 
-  const OtpScreen({Key? key, }) : super(key: key);
+  const OtpScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -46,9 +48,7 @@ class _OtpScreenState extends State<OtpScreen> {
   );
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    
   }
 
   @override
@@ -72,172 +72,176 @@ class _OtpScreenState extends State<OtpScreen> {
         )),
         child: SafeArea(
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  backgroundColor: ColorManager.grayDark,
-                  radius: size.width * 0.3,
-                  child: LottieBuilder.asset(
-                    'assets/enter_otp.json',
-                    width: size.width * 0.45,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: ColorManager.grayDark,
+                    radius: size.width * 0.3,
+                    child: LottieBuilder.asset(
+                      ImageAssets.enterOtp,
+                      width: size.width * 0.45,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, size.height * 0.02, 0, 0),
-                  child: Text(
-                    'OTP Verification',
-                    style: getBoldtStyle(
-                        color: ColorManager.background, fontSize: 22),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, size.height * 0.02, 0, 0),
+                    child: Text(
+                      'OTP Verification',
+                      style: getBoldtStyle(
+                          color: ColorManager.background, fontSize: 22),
+                    ),
                   ),
-                ),
-                Text(
-                  'Enter the otp send to 9084070327',
-                  style: getRegularStyle(
-                      color: ColorManager.grayLight, fontSize: 12),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 30, 0, 10),
-                  child: Text(
-                    'Waiting for the OTP',
-                    style: getBoldtStyle(
-                        color: ColorManager.background, fontSize: 12),
+                  Text(
+                    'Enter the otp send to 9084070327',
+                    style: getRegularStyle(
+                        color: ColorManager.grayLight, fontSize: 12),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 30, 0, 10),
+                    child: Text(
+                      'Waiting for the OTP',
+                      style: getBoldtStyle(
+                          color: ColorManager.background, fontSize: 12),
+                    ),
+                  ),
 
-                //* Pinput start
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                  child: Pinput(
-                    length: 6,
-                    controller: controller,
-                    // autofocus: true,
-                    focusNode: focusNode,
-                    defaultPinTheme: defaultPinTheme,
-                    pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-                    showCursor: true,
-                    onCompleted: (pin) async {
-                      // print(pin);
-                      // try {
-                      //   await FirebaseAuth.instance
-                      //       .signInWithCredential(PhoneAuthProvider.credential(
-                      //           verificationId: verificationcode, smsCode: pin))
-                      //       .then((value) async {
-                      //     if (value.user != null) {
-                      //       print(value.user);
-                      //       print(value.credential);
-                      //       print(value.hashCode);
-                      //       print('Pass to home');
-                      //       setState(() {
-                      //         pinVerified = true;
-                      //       });
-                      //     }
-                      //   });
-                      // } catch (e) {
-                      //   print(e);
-                      //   showSnackBar("Invalid OTP!", context,
-                      //       icon: Icons.format_list_numbered_outlined,
-                      //       color: Colors.red);
-                      // }
-                      // pinVerified == true ? await getUserDetails() : null;
-                      // userNameAv
-                      //     ? Navigator.pushNamedAndRemoveUntil(
-                      //         context, Routes.shopList, (route) => false)
-                      //     : Navigator.pushReplacementNamed(
-                      //         context, Routes.otpAfter);
-                    },
-                    androidSmsAutofillMethod:
-                        AndroidSmsAutofillMethod.smsRetrieverApi,
+                  //* Pinput start
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    child: Pinput(
+                      length: 6,
+                      controller: controller,
+                      // autofocus: true,
+                      focusNode: focusNode,
+                      defaultPinTheme: defaultPinTheme,
+                      pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                      showCursor: true,
+                      onCompleted: (pin) async {
+                        // print(pin);
+                        // try {
+                        //   await FirebaseAuth.instance
+                        //       .signInWithCredential(PhoneAuthProvider.credential(
+                        //           verificationId: verificationcode, smsCode: pin))
+                        //       .then((value) async {
+                        //     if (value.user != null) {
+                        //       print(value.user);
+                        //       print(value.credential);
+                        //       print(value.hashCode);
+                        //       print('Pass to home');
+                        //       setState(() {
+                        //         pinVerified = true;
+                        //       });
+                        //     }
+                        //   });
+                        // } catch (e) {
+                        //   print(e);
+                        //   showSnackBar("Invalid OTP!", context,
+                        //       icon: Icons.format_list_numbered_outlined,
+                        //       color: Colors.red);
+                        // }
+                        // pinVerified == true ? await getUserDetails() : null;
+                        // userNameAv
+                        // ?
+                        await LoginImp(context: context).getUsers();
+                        // Navigator.pushNamedAndRemoveUntil(
+                        //     context, Routes.homeScreen, (route) => false);
+                        Navigator.pushNamed(context, Routes.homeScreen);
+                      },
+                      androidSmsAutofillMethod:
+                          AndroidSmsAutofillMethod.smsRetrieverApi,
+                    ),
                   ),
-                ),
-                //* Pinput end
-                Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      MultiStateButton(
-                        multiStateButtonController: multiStateButtonController,
-                        buttonStates: [
-                          //submit state
-                          ButtonState(
-                            stateName: _submit,
-                            child: const FittedBox(
-                              child: Text(
-                                _submit,
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                                // color: ColorManager.disabledColor,
-                                borderRadius: BorderRadius.circular(
-                                  size.height * 0.05,
-                                )),
-                            textStyle: getSemiBoldtStyle(
-                              color: ColorManager.background,
-                            ),
-                            size: Size(size.height * .26, 58),
-                            color: Colors.blue,
-                            onPressed: () {},
-                          ),
-                          //loading state
-                          ButtonState(
-                            stateName: _loading,
-                            alignment: Alignment.center,
-                            child: const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: FittedBox(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 5,
-                                  color: Colors.white,
+                  //* Pinput end
+                  Padding(
+                    padding: const EdgeInsetsDirectional.fromSTEB(0, 24, 0, 24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        MultiStateButton(
+                          multiStateButtonController:
+                              multiStateButtonController,
+                          buttonStates: [
+                            //submit state
+                            ButtonState(
+                              stateName: _submit,
+                              child: const FittedBox(
+                                child: Text(
+                                  _submit,
                                 ),
                               ),
+                              decoration: BoxDecoration(
+                                  // color: ColorManager.disabledColor,
+                                  borderRadius: BorderRadius.circular(
+                                size.height * 0.05,
+                              )),
+                              textStyle: getSemiBoldtStyle(
+                                color: ColorManager.background,
+                              ),
+                              size: Size(size.height * .26, 58),
+                              color: Colors.blue,
+                              onPressed: () {},
                             ),
-                            decoration: const BoxDecoration(
-                              color: ColorManager.primary,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(48)),
+                            //loading state
+                            ButtonState(
+                              stateName: _loading,
+                              alignment: Alignment.center,
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: FittedBox(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 5,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              decoration: const BoxDecoration(
+                                color: ColorManager.primary,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(48)),
+                              ),
+                              size: const Size(45, 45),
+                              onPressed: () {},
                             ),
-                            size: const Size(45, 45),
-                            onPressed: () {},
-                          ),
-                          //success button
-                          ButtonState(
-                            stateName: _success,
-                            alignment: Alignment.center,
-                            child: Lottie.asset('assets/created.json',
-                                fit: BoxFit.fill, repeat: false),
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 17, 184, 62),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(48)),
+                            //success button
+                            ButtonState(
+                              stateName: _success,
+                              alignment: Alignment.center,
+                              child: Lottie.asset('assets/created.json',
+                                  fit: BoxFit.fill, repeat: false),
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 17, 184, 62),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(48)),
+                              ),
+                              size: const Size(45, 45),
+                              onPressed: () {},
                             ),
-                            size: const Size(45, 45),
-                            onPressed: () {},
-                          ),
-                        ],
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(
+                    "Didn't receive the OTP?",
+                    style: getRegularStyle(
+                        color: ColorManager.grayLight, fontSize: 12),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Resend',
+                        style: getRegularStyle(
+                            color: ColorManager.grayLight, fontSize: 12),
                       ),
+                      const SlideCountdown(
+                        duration: Duration(seconds: 60),
+                      )
                     ],
                   ),
-                ),
-                Text(
-                  "Didn't receive the OTP?",
-                  style: getRegularStyle(
-                      color: ColorManager.grayLight, fontSize: 12),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Resend',
-                      style: getRegularStyle(
-                          color: ColorManager.grayLight, fontSize: 12),
-                    ),
-                    const SlideCountdown(
-                      duration: Duration(seconds: 60),
-                    )
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
