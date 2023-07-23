@@ -5,13 +5,13 @@ class DataProvider with ChangeNotifier {
   UsersListModel? usersListModel;
 
   void getUserData(UsersListModel value) {
-    // if (employeesModel?.data != null && employeesModel?.data?.data != null) {
-    //   for (var data in value.data!.data!) {
-    //     employeesModel?.data?.data?.add(data);
-    //   }
-    // } else {
-    usersListModel = value;
-    // }
+    if (usersListModel?.users != null) {
+      for (var data in value.users!) {
+        usersListModel?.users?.add(data);
+      }
+    } else {
+      usersListModel = value;
+    }
     notifyListeners();
   }
 }

@@ -1,7 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:magadh_tech/config/route_manager.dart';
 import 'package:magadh_tech/controllers/text_controllers.dart';
+import 'package:magadh_tech/presentation/screens/user_detail_screen.dart';
 import 'package:magadh_tech/data/providers/data_provider.dart';
 import 'package:magadh_tech/data/repositories/login_request.dart';
 import 'package:magadh_tech/utils/color_manager.dart';
@@ -108,28 +110,33 @@ class _HomeScreenState extends State<HomeScreen> {
             return ListTile(
               leading: ClipOval(
                 child: CachedNetworkImage(
-                    width: 50,
-                    height: 50,
-                    imageUrl:
-                        "https://flutter.magadh.co/${userData![index].image}"),
+                  width: 50,
+                  height: 50,
+                  imageUrl:
+                      "https://flutter.magadh.co/${userData?[index].image}",
+                  errorWidget: (context, url, error) {
+                    return Container(
+                      color: ColorManager.grayDark,
+                    );
+                  },
+                ),
               ),
               title: Row(
                 children: [
-                  Text(userData[index].name ?? ''),
+                  Text(userData?[index].name ?? ''),
                   // Padding(
                   //   padding: const EdgeInsets.only(left: 3),
                   //   child: Text(userData[index].lastName ?? ''),
                   // ),
                 ],
               ),
-              subtitle: Text(userData[index].phone.toString()),
-              // onTap: () {
-              //   Navigator.push(context, MaterialPageRoute(builder: (ctx) {
-              //     return EmployeeDetailScreen(
-              //       data: userData[index],
-              //     );
-              //   }));
-              // },
+              subtitle: Text(userData?[index].phone.toString() ?? ''),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    FadePageRoute(
+                        page: UserDetailScreen(users: userData![index])));
+              },
             );
           },
         ),

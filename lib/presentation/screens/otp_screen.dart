@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:magadh_tech/config/route_manager.dart';
+import 'package:magadh_tech/controllers/text_controllers.dart';
+import 'package:magadh_tech/data/failures/main_failures.dart';
 import 'package:magadh_tech/data/repositories/login_request.dart';
 import 'package:magadh_tech/utils/asset_manager.dart';
 import 'package:magadh_tech/utils/color_manager.dart';
+import 'package:magadh_tech/utils/otp_request.dart';
 import 'package:magadh_tech/utils/style_manager.dart';
 import 'package:multi_state_button/multi_state_button.dart';
 import 'package:pinput/pinput.dart';
 import 'package:slide_countdown/slide_countdown.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({
@@ -24,7 +29,8 @@ class _OtpScreenState extends State<OtpScreen> {
   static const String _submit = "Verify OTP";
   static const String _loading = "Loading";
   static const String _success = "Success";
-  final controller = TextEditingController();
+  int _seconds = 60;
+
   final focusNode = FocusNode();
   String? verificationId;
   String verificationcode = '';
@@ -53,7 +59,6 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   void dispose() {
-    controller.dispose();
     focusNode.dispose();
     super.dispose();
   }
@@ -111,13 +116,62 @@ class _OtpScreenState extends State<OtpScreen> {
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                     child: Pinput(
                       length: 6,
-                      controller: controller,
+                      controller: PhoneNoController.otpController,
                       // autofocus: true,
                       focusNode: focusNode,
                       defaultPinTheme: defaultPinTheme,
                       pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                       showCursor: true,
                       onCompleted: (pin) async {
+                        final res = await LoginImp().loginVerify();
+                        res.fold(
+                          (failure) {
+                            failure == const MainFailure.serverFailure()
+                                ? showTopSnackBar(
+                                    Overlay.of(context),
+                                    const SizedBox(
+                                      height: 50,
+                                      child: CustomSnackBar.error(
+                                        icon: Icon(Icons.people),
+                                        iconPositionLeft: 20,
+                                        iconPositionTop: -25,
+                                        message: "Invalid OTP",
+                                      ),
+                                    ),
+                                  )
+                                : showTopSnackBar(
+                                    Overlay.of(context),
+                                    const SizedBox(
+                                      height: 50,
+                                      child: CustomSnackBar.error(
+                                        icon: Icon(Icons
+                                            .signal_wifi_connected_no_internet_4_outlined),
+                                        iconPositionLeft: 20,
+                                        iconPositionTop: -25,
+                                        message: "Check Your Connection",
+                                      ),
+                                    ),
+                                  );
+                          },
+                          (success) async {
+                            showTopSnackBar(
+                              Overlay.of(context),
+                              const SizedBox(
+                                height: 50,
+                                child: CustomSnackBar.success(
+                                  icon: Icon(Icons.done),
+                                  iconRotationAngle: 0,
+                                  iconPositionLeft: 20,
+                                  iconPositionTop: -25,
+                                  message: "OTP Verified",
+                                ),
+                              ),
+                            );
+                            await LoginImp(context: context).getUsers();
+                            Navigator.pushNamed(context, Routes.homeScreen);
+                          },
+                        );
+
                         // print(pin);
                         // try {
                         //   await FirebaseAuth.instance
@@ -143,10 +197,10 @@ class _OtpScreenState extends State<OtpScreen> {
                         // pinVerified == true ? await getUserDetails() : null;
                         // userNameAv
                         // ?
-                        await LoginImp(context: context).getUsers();
-                        // Navigator.pushNamedAndRemoveUntil(
-                        //     context, Routes.homeScreen, (route) => false);
-                        Navigator.pushNamed(context, Routes.homeScreen);
+
+                        // // Navigator.pushNamedAndRemoveUntil(
+                        // //     context, Routes.homeScreen, (route) => false);
+                        // Navigator.pushNamed(context, Routes.homeScreen);
                       },
                       androidSmsAutofillMethod:
                           AndroidSmsAutofillMethod.smsRetrieverApi,
@@ -230,14 +284,30 @@ class _OtpScreenState extends State<OtpScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        'Resend',
-                        style: getRegularStyle(
-                            color: ColorManager.grayLight, fontSize: 12),
-                      ),
-                      const SlideCountdown(
-                        duration: Duration(seconds: 60),
-                      )
+                      _seconds == 0
+                          ? ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  _seconds = 60;
+                                });
+                                getOtp(context);
+                              },
+                              child: const Text("Resend"))
+                          : Text(
+                              'Resend',
+                              style: getRegularStyle(
+                                  color: ColorManager.grayLight, fontSize: 12),
+                            ),
+                      _seconds == 0
+                          ? Container()
+                          : SlideCountdown(
+                              duration: Duration(seconds: _seconds),
+                              onDone: () {
+                                setState(() {
+                                  _seconds = 0;
+                                });
+                              },
+                            )
                     ],
                   ),
                 ],
