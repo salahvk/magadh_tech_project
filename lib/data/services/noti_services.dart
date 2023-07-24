@@ -6,11 +6,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
-
+  final _firebaseMessaging = FirebaseMessaging.instance;
   Future<void> initNotification() async {
     AndroidInitializationSettings initializationSettingsAndroid =
         const AndroidInitializationSettings('flutter_logo');
-
+    // await _firebaseMessaging.requestPermission();
     var initializationSettingsIOS = DarwinInitializationSettings(
         requestAlertPermission: true,
         requestBadgePermission: true,
@@ -25,7 +25,7 @@ class NotificationService {
       onDidReceiveNotificationResponse:
           (NotificationResponse notificationResponse) async {
         final payload = notificationResponse.payload;
-        _handleNotificationClick(payload);
+        handleNotificationClick(payload);
       },
     );
     // FirebaseMessaging.onBackgroundMessage(handleBackgroundNotification);
@@ -53,7 +53,7 @@ class NotificationService {
     );
   }
 
-  void _handleNotificationClick(String? payload) {
+  void handleNotificationClick(String? payload) {
     // Check if payload is not null and handle the navigation accordingly
     if (payload != null) {
       print(payload);
@@ -83,7 +83,7 @@ class NotificationService {
     }
   }
 
-  Future<void> _handleBackgroundNotification(RemoteMessage message) async {
+  Future<void> handleBackgroundNotification(RemoteMessage message) async {
     // Extract information from the notification payload
     final notificationData = message.data;
     print(notificationData);
