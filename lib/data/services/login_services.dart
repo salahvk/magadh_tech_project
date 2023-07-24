@@ -8,4 +8,6 @@ abstract class MagadhServices {
   Future<Either<MainFailure, LoginRequestModel>> userLogin();
   Future<Either<MainFailure, UsersListModel>> getUsers();
   Future<Either<MainFailure, LoginVerifyModel>> loginVerify();
+  Future<Either<MainFailure, LoginVerifyModel>> verifyToken();
+  Future<Either<MainFailure, LoginVerifyModel>> updateProfile();
 }

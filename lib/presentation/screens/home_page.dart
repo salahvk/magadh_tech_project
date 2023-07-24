@@ -6,6 +6,7 @@ import 'package:magadh_tech/controllers/text_controllers.dart';
 import 'package:magadh_tech/presentation/screens/user_detail_screen.dart';
 import 'package:magadh_tech/data/providers/data_provider.dart';
 import 'package:magadh_tech/data/repositories/login_request.dart';
+import 'package:magadh_tech/presentation/widgets/custom_drawer.dart';
 import 'package:magadh_tech/utils/color_manager.dart';
 import 'package:magadh_tech/utils/style_manager.dart';
 import 'package:provider/provider.dart';
@@ -48,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final provider = Provider.of<DataProvider>(context, listen: true);
     final userData = provider.usersListModel?.users;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorManager.primary,
@@ -56,20 +58,53 @@ class _HomeScreenState extends State<HomeScreen> {
           style: getSemiBoldtStyle(color: ColorManager.grayDark, fontSize: 16),
         ),
         actions: [
-          InkWell(
-            onTap: () {
-              // logoutFun(context);
-            },
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.logout,
-                color: ColorManager.grayDark,
+          // InkWell(
+          //   onTap: () {
+          //     // logoutFun(context);
+          //   },
+          //   child: const Padding(
+          //     padding: EdgeInsets.all(8.0),
+          //     child: Icon(
+          //       Icons.logout,
+          //       color: ColorManager.grayDark,
+          //     ),
+          //   ),
+          // ),
+          Builder(
+            builder: (context) => InkWell(
+              onTap: () {
+                Scaffold.of(context).openEndDrawer();
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ClipOval(
+                  child: CachedNetworkImage(
+                    width: 40,
+                    height: 40,
+                    imageUrl:
+                        "https://flutter.magadh.co/${provider.loginVerifyModel?.user?.image}",
+                    errorWidget: (context, url, error) {
+                      return Container(
+                        color: ColorManager.grayDark,
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
           ),
         ],
         elevation: 0,
+      ),
+      endDrawer: SizedBox(
+        width: size.width * .5,
+        // height: size.height * 0.825,
+        // width: mobWth
+        //     ? size.width * 0.6
+        //     : smobWth
+        //         ? w * .7
+        //         : w * .75,
+        child: const CustomDrawer(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

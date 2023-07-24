@@ -167,7 +167,9 @@ class _OtpScreenState extends State<OtpScreen> {
                                 ),
                               ),
                             );
+
                             await LoginImp(context: context).getUsers();
+                            await LoginImp(context: context).verifyToken();
                             Navigator.pushNamed(context, Routes.homeScreen);
                           },
                         );
