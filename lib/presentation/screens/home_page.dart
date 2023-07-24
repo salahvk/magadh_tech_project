@@ -53,20 +53,14 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _firebaseMessaging.getToken().then((token) {
       print('FCM Token: $token');
-      // Send the token to your server to target specific users for notifications
     });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Received message: ${message.notification?.body}');
       NotificationService().showNotification(
           title: message.notification?.title, body: message.notification?.body);
-      // Handle the notification when the app is in the foreground
     });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('Opened message: ${message.notification?.body}');
-      // Handle the notification when the app is in the background or terminated
-    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {});
   }
 
   @override
@@ -78,22 +72,11 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: ColorManager.primary,
         title: Text(
-          "Employee",
-          style: getSemiBoldtStyle(color: ColorManager.grayDark, fontSize: 16),
+          "Users",
+          style:
+              getSemiBoldtStyle(color: ColorManager.background, fontSize: 16),
         ),
         actions: [
-          // InkWell(
-          //   onTap: () {
-          //     // logoutFun(context);
-          //   },
-          //   child: const Padding(
-          //     padding: EdgeInsets.all(8.0),
-          //     child: Icon(
-          //       Icons.logout,
-          //       color: ColorManager.grayDark,
-          //     ),
-          //   ),
-          // ),
           Builder(
             builder: (context) => InkWell(
               onTap: () {
@@ -109,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     imageUrl:
                         "https://flutter.magadh.co/${provider.loginVerifyModel?.user?.image}",
                     errorWidget: (context, url, error) {
-                      print(error);
                       return Container(
                         color: ColorManager.grayDark,
                       );
@@ -125,21 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
       endDrawer: SizedBox(
         width: size.width * .5,
         height: size.height * 0.5,
-        // width: mobWth
-        //     ? size.width * 0.6
-        //     : smobWth
-        //         ? w * .7
-        //         : w * .75,
         child: const CustomDrawer(),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     NotificationService()
-      //         .showNotification(title: 'Sample title', body: 'It works!');
-      //     // Navigator.pushNamed(context, Routes.addEmployeeScreen);
-      //   },
-      //   child: const Icon(Icons.add, size: 25),
-      // ),
       body: SmartRefresher(
         enablePullDown: false,
         enablePullUp: true,
@@ -187,10 +156,6 @@ class _HomeScreenState extends State<HomeScreen> {
               title: Row(
                 children: [
                   Text(userData?[index].name ?? ''),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(left: 3),
-                  //   child: Text(userData[index].lastName ?? ''),
-                  // ),
                 ],
               ),
               subtitle: Text(userData?[index].phone.toString() ?? ''),

@@ -134,13 +134,10 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                                           fontFamily: "Open",
                                           fontWeight: FontWeight.w600,
                                           color: Colors.white))
-                                  : Container(
-                                      child: const CircularProgressIndicator(
-                                        backgroundColor: Colors.blue,
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Colors.white),
-                                      ),
+                                  : const CircularProgressIndicator(
+                                      backgroundColor: Colors.blue,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
                                     ),
                             ),
                           ),

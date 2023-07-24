@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:magadh_tech/config/route_manager.dart';
@@ -173,36 +175,6 @@ class _OtpScreenState extends State<OtpScreen> {
                             Navigator.pushNamed(context, Routes.homeScreen);
                           },
                         );
-
-                        // print(pin);
-                        // try {
-                        //   await FirebaseAuth.instance
-                        //       .signInWithCredential(PhoneAuthProvider.credential(
-                        //           verificationId: verificationcode, smsCode: pin))
-                        //       .then((value) async {
-                        //     if (value.user != null) {
-                        //       print(value.user);
-                        //       print(value.credential);
-                        //       print(value.hashCode);
-                        //       print('Pass to home');
-                        //       setState(() {
-                        //         pinVerified = true;
-                        //       });
-                        //     }
-                        //   });
-                        // } catch (e) {
-                        //   print(e);
-                        //   showSnackBar("Invalid OTP!", context,
-                        //       icon: Icons.format_list_numbered_outlined,
-                        //       color: Colors.red);
-                        // }
-                        // pinVerified == true ? await getUserDetails() : null;
-                        // userNameAv
-                        // ?
-
-                        // // Navigator.pushNamedAndRemoveUntil(
-                        // //     context, Routes.homeScreen, (route) => false);
-                        // Navigator.pushNamed(context, Routes.homeScreen);
                       },
                       androidSmsAutofillMethod:
                           AndroidSmsAutofillMethod.smsRetrieverApi,
@@ -320,89 +292,4 @@ class _OtpScreenState extends State<OtpScreen> {
       ),
     );
   }
-  //*  phone number authentication start
-
-  // signup() async {
-  //   FirebaseAuth auth = FirebaseAuth.instance;
-  //   print('Your phone number is ${widget.phoneNo}');
-
-  //   await auth.verifyPhoneNumber(
-  //       phoneNumber: '+91 ${widget.phoneNo}',
-  //       verificationCompleted: (PhoneAuthCredential credential) async {
-  //         await auth.signInWithCredential(credential).then((value) async {
-  //           if (value.user != null) {
-  //             print('User logged in');
-  //           }
-  //         });
-  //         print('credential ${credential.smsCode}');
-  //         if (credential.smsCode != null) {
-  //           setState(() {
-  //             smsReceived = true;
-  //           });
-  //         }
-  //       },
-  //       verificationFailed: (FirebaseAuthException e) {
-  //         print(e.message);
-  //         print(e.code);
-  //       },
-  //       codeSent: (verificationId, int? resendToken) async {
-  //         print('This is verificaiton id $verificationId');
-  //         print('This is resend token $resendToken');
-  //         String smsCode = '';
-  //         if (mounted) {
-  //           setState(() {
-  //             verificationcode = verificationId;
-  //           });
-  //         }
-  //         PhoneAuthCredential credential = PhoneAuthProvider.credential(
-  //             verificationId: verificationId, smsCode: smsCode);
-  //         print('This is SmsCode ${credential.smsCode}');
-  //         print(credential.smsCode);
-  //       },
-  //       timeout: const Duration(seconds: 60),
-  //       codeAutoRetrievalTimeout: (verificationid) {
-  //         setState(() {
-  //           verificationcode = verificationid;
-  //         });
-  //       });
-  // }
-  //*  phone number authentication end
-
-  // getUserDetails() async {
-  //   final provider = Provider.of<Data>(context, listen: false);
-  //   final user = FirebaseAuth.instance.currentUser;
-  //   print('Get user details');
-  //   print(user?.phoneNumber);
-  //   print('Login number');
-  //   print(user?.uid);
-
-  //   try {
-  //     print('user place and name getting');
-
-  //     await FirebaseFirestore.instance
-  //         .collection("users data")
-  //         .where("email", isEqualTo: "${user?.phoneNumber}")
-  //         .get()
-  //         .then((value) {
-  //       value.docs.forEach((result) {
-  //         print(result.get('name'));
-  //         final userName = result.get('name');
-  //         final place = result.get('place');
-  //         if (userName != null) {
-  //           print("username not null");
-  //           provider.changePlace(place);
-
-  //           setState(() {
-  //             userNameAv = true;
-  //           });
-  //         } else {
-  //           print("username is null");
-  //         }
-  //       });
-  //     });
-  //     print('user place and name ended');
-  //   } on Exception catch (e) {
-  //     print(e);
-  //   }
-  // }
 }

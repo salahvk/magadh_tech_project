@@ -167,21 +167,11 @@ class LoginImp implements MagadhServices {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? accessToken = prefs.getString('access_token');
       final url = Uri.parse(users);
-      // print(provider.imageFile?.path);
-      // String base64Image = await convertImageToBase64(provider.imageFile!);
-      // print(base64Image);
-      // Map<String, dynamic> data = {
-      //   "image": base64Image,
-      //   "location": {
-      //     "location": {"latitude": 0, "longitude": 0}
-      //   }
-      //   // Add other data you want to send in the request body
-      // };
+
       var request = http.MultipartRequest('PATCH', url);
       request.files.add(await http.MultipartFile.fromPath(
         'image',
         provider.imageFile?.path ?? '',
-        // filename: provider.imageFi, // Replace with your desired filename
       ));
       request.fields['location'] =
           '{"location":{"latitude":${provider.latitude.toString()},"longitude":${provider.longitude.toString()}}}';
@@ -190,9 +180,7 @@ class LoginImp implements MagadhServices {
       // Send the request and get the response
       var res = await request.send();
       final response = await http.Response.fromStream(res);
-      // final response =
-      //     await http.patch(url, headers: headers, body: jsonEncode(data));
-      print(response.body);
+
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
         final result = LoginVerifyModel.fromJson(jsonResponse);
@@ -218,7 +206,7 @@ class LoginImp implements MagadhServices {
           Navigator.pushNamedAndRemoveUntil(
               context!, Routes.otpScreen, (route) => false);
         });
-        // provider.getProfileData(result);
+
         log(response.body);
         return Right(result);
       } else {

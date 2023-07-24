@@ -93,7 +93,6 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
               markers: <Marker>{
                 Marker(
                   onDragEnd: (value) async {
-                    print(value);
                     await getPlaceAddress(value);
                   },
                   draggable: true,
@@ -257,7 +256,6 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         });
       }
     } catch (error) {
-      print(error);
       setState(() {
         isLocationChanged = false;
       });
@@ -279,9 +277,6 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(
           locations[0].latitude, locations[0].longitude);
-      // print(_lastTap);
-      // print(placemarks);
-      // print(placemarks[0].subLocality!.isEmpty);
       getLocationName(placemarks);
 
       setState(() {
@@ -294,7 +289,6 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
         });
       }
     } catch (error) {
-      print(error);
       setState(() {
         isLocationChanged = false;
       });

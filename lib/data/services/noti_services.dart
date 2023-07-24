@@ -56,6 +56,7 @@ class NotificationService {
   void _handleNotificationClick(String? payload) {
     // Check if payload is not null and handle the navigation accordingly
     if (payload != null) {
+      print(payload);
       // For example, parse the payload JSON or handle data based on payload contents
       final data = parsePayload(payload);
 
@@ -82,7 +83,7 @@ class NotificationService {
     }
   }
 
-  Future<void> handleBackgroundNotification(RemoteMessage message) async {
+  Future<void> _handleBackgroundNotification(RemoteMessage message) async {
     // Extract information from the notification payload
     final notificationData = message.data;
     print(notificationData);

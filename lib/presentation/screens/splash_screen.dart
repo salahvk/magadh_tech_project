@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:magadh_tech/config/route_manager.dart';
 import 'package:magadh_tech/data/repositories/login_request.dart';
@@ -24,7 +26,6 @@ class _SplashScreenState extends State<SplashScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      final BuildContext myContext = context;
       await Future.delayed(const Duration(seconds: 3));
       final userRes = await LoginImp(context: context).getUsers();
       userRes.fold((failure) async {
@@ -32,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
       }, (success) {});
 
       final String? token = prefs.getString('access_token');
-      print(token);
+
       if (token == null) {
         Navigator.pushReplacementNamed(context, Routes.landingScreen);
       } else {
@@ -52,7 +53,6 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Stack(
           alignment: AlignmentDirectional.center,
           children: [
-            // Lottie.asset(ImageAssets.splashLottie),
             Image.asset(ImageAssets.splashImage),
             Padding(
               padding: const EdgeInsets.only(top: 300),

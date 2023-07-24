@@ -23,7 +23,6 @@ class DataProvider with ChangeNotifier {
   }
 
   void getProfileData(LoginVerifyModel value) {
-    print(value);
     loginVerifyModel = value;
 
     notifyListeners();
