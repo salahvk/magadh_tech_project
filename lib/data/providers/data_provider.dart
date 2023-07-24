@@ -1,12 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:magadh_tech/data/model/login_verify_model.dart';
 import 'package:magadh_tech/data/model/user_list.dart';
 
 class DataProvider with ChangeNotifier {
   UsersListModel? usersListModel;
   LoginVerifyModel? loginVerifyModel;
-  XFile? imageFile;
+  File? imageFile;
+  dynamic latitude;
+  dynamic longitude;
 
   void getUserData(UsersListModel value) {
     if (usersListModel?.users != null) {
@@ -20,6 +23,7 @@ class DataProvider with ChangeNotifier {
   }
 
   void getProfileData(LoginVerifyModel value) {
+    print(value);
     loginVerifyModel = value;
 
     notifyListeners();

@@ -1,8 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:magadh_tech/config/route_manager.dart';
 import 'package:magadh_tech/controllers/text_controllers.dart';
+import 'package:magadh_tech/data/services/noti_services.dart';
 import 'package:magadh_tech/presentation/screens/user_detail_screen.dart';
 import 'package:magadh_tech/data/providers/data_provider.dart';
 import 'package:magadh_tech/data/repositories/login_request.dart';
@@ -21,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentPage = 1;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
 
@@ -43,6 +46,27 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {});
     }
     _refreshController.loadComplete();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseMessaging.getToken().then((token) {
+      print('FCM Token: $token');
+      // Send the token to your server to target specific users for notifications
+    });
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Received message: ${message.notification?.body}');
+      NotificationService().showNotification(
+          title: message.notification?.title, body: message.notification?.body);
+      // Handle the notification when the app is in the foreground
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('Opened message: ${message.notification?.body}');
+      // Handle the notification when the app is in the background or terminated
+    });
   }
 
   @override
@@ -81,9 +105,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: CachedNetworkImage(
                     width: 40,
                     height: 40,
+                    fit: BoxFit.cover,
                     imageUrl:
                         "https://flutter.magadh.co/${provider.loginVerifyModel?.user?.image}",
                     errorWidget: (context, url, error) {
+                      print(error);
                       return Container(
                         color: ColorManager.grayDark,
                       );
@@ -98,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       endDrawer: SizedBox(
         width: size.width * .5,
-        // height: size.height * 0.825,
+        height: size.height * 0.5,
         // width: mobWth
         //     ? size.width * 0.6
         //     : smobWth
@@ -106,12 +132,14 @@ class _HomeScreenState extends State<HomeScreen> {
         //         : w * .75,
         child: const CustomDrawer(),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigator.pushNamed(context, Routes.addEmployeeScreen);
-        },
-        child: const Icon(Icons.add, size: 25),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     NotificationService()
+      //         .showNotification(title: 'Sample title', body: 'It works!');
+      //     // Navigator.pushNamed(context, Routes.addEmployeeScreen);
+      //   },
+      //   child: const Icon(Icons.add, size: 25),
+      // ),
       body: SmartRefresher(
         enablePullDown: false,
         enablePullUp: true,

@@ -29,6 +29,13 @@
             {
               "client_id": "441165502515-vs1e4scrqi7oed4ti0rtstnr1f39o8gr.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "441165502515-j73qbtgrhnic2tvbs9qletsbrbedik2m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.magadhTech"
+              }
             }
           ]
         }

@@ -4,11 +4,16 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:magadh_tech/config/route_manager.dart';
 import 'package:magadh_tech/data/providers/data_provider.dart';
+import 'package:magadh_tech/data/repositories/login_request.dart';
 import 'package:magadh_tech/utils/color_manager.dart';
 import 'package:magadh_tech/utils/style_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({
@@ -27,24 +32,23 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   selectImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      imagePath = image?.path;
-      imageFile = image;
-    });
-    final provider = Provider.of<DataProvider>(context, listen: false);
-    provider.imageFile = image;
-    final imageName = image?.name;
     if (image == null) {
       return;
     }
-    // // updateProfile(imageName);
-    // setState(() {
-    //   isLoading = true;
-    // });
-    // // await upload(image);
-    // setState(() {
-    //   isLoading = false;
-    // });
+    setState(() {
+      imagePath = image.path;
+      imageFile = image;
+    });
+    final provider = Provider.of<DataProvider>(context, listen: false);
+
+    provider.imageFile = File(imagePath!);
+  }
+
+  logOUtFunction() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('access_token');
+    Navigator.pushNamedAndRemoveUntil(
+        context, Routes.landingScreen, (route) => false);
   }
 
   @override
@@ -58,8 +62,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
         ),
-        // margin: const EdgeInsets.all(0.0),
-        // padding: const EdgeInsets.all(0.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -123,8 +125,20 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 ),
               ],
             ),
+            Text(
+              profileData?.name ?? '',
+              style:
+                  getRegularStyle(color: ColorManager.textColor, fontSize: 14),
+            ),
+            Text(
+              profileData?.email ?? '',
+              style:
+                  getRegularStyle(color: ColorManager.textColor, fontSize: 14),
+            ),
             InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, Routes.mapScreen);
+              },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
@@ -134,34 +148,41 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 ),
               ),
             ),
-            InkWell(
-              onTap: () {},
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Update Profile",
-                  style: getSemiBoldtStyle(
-                      color: ColorManager.background, fontSize: 16),
-                ),
+            ElevatedButton(
+              onPressed: () async {
+                if (imagePath == null) {
+                  showTopSnackBar(
+                    Overlay.of(context),
+                    const SizedBox(
+                      height: 50,
+                      child: CustomSnackBar.error(
+                        icon: Icon(
+                            Icons.signal_wifi_connected_no_internet_4_outlined),
+                        iconPositionLeft: 20,
+                        iconPositionTop: -25,
+                        message: "Upload an image",
+                      ),
+                    ),
+                  );
+                  return;
+                }
+                await LoginImp(context: context).updateProfile();
+              },
+              child: Text(
+                "Update Profile",
+                style: getSemiBoldtStyle(
+                    color: ColorManager.background, fontSize: 16),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: logOUtFunction,
+              child: Text(
+                "Logout",
+                style: getSemiBoldtStyle(
+                    color: ColorManager.background, fontSize: 16),
               ),
             ),
           ],
         ));
-  }
-
-  logOUtFunction() async {
-    allowfunction(context);
-    // showDialog(
-    //     context: context,
-    //     builder: (context) => const DialogueBox(),
-    //     barrierDismissible: false);
-  }
-
-  allowfunction(BuildContext context) async {
-    setState(() {
-      loading = true;
-    });
-    // await logoutFun(context);
-    // await Hive.box("token").clear();
   }
 }

@@ -107,23 +107,8 @@ class _UserDetailScreenState extends State<UserDetailScreen> {
                                         markerId:
                                             const MarkerId('test_marker_id'),
                                         position: currentLocator,
-                                        // infoWindow: InfoWindow(
-                                        //   title: place,
-                                        //   // snippet: '*',
-                                        // ),
                                       ),
                                     },
-                                    // gestureRecognizers: //
-                                    //     <Factory<OneSequenceGestureRecognizer>>{
-                                    //   Factory<OneSequenceGestureRecognizer>(
-                                    //     () => EagerGestureRecognizer(),
-                                    //   ),
-                                    // },
-                                    // gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
-                                    //   Factory<OneSequenceGestureRecognizer>(
-                                    //     () => EagerGestureRecognizer(),
-                                    //   ),
-                                    // }
                                   ),
                                 ),
                                 Row(

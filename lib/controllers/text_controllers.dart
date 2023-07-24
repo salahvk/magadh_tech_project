@@ -8,3 +8,8 @@ class PhoneNoController {
 class HomeController {
   static TextEditingController pageController = TextEditingController();
 }
+
+class GoogleMapControllers {
+  static TextEditingController googleMapSearchController =
+      TextEditingController();
+}

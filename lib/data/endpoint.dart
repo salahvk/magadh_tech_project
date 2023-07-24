@@ -5,5 +5,5 @@ String users = "$endPoint/users";
 class ApiEndPoint {
   static String login = "$users/login-request";
   static String loginVerify = "$users/login-verify";
-  // static String designations = "$api/designations";
+  static String verifyTOken = "$users//verify-token";
 }

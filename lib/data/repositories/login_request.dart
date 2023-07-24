@@ -2,11 +2,11 @@
 
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
+import 'package:magadh_tech/config/route_manager.dart';
 import 'package:magadh_tech/controllers/text_controllers.dart';
 import 'package:magadh_tech/data/endpoint.dart';
 import 'package:magadh_tech/data/failures/main_failures.dart';
@@ -15,9 +15,10 @@ import 'package:magadh_tech/data/model/login_verify_model.dart';
 import 'package:magadh_tech/data/model/user_list.dart';
 import 'package:magadh_tech/data/providers/data_provider.dart';
 import 'package:magadh_tech/data/services/login_services.dart';
-import 'package:magadh_tech/utils/convert_image.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 @LazySingleton(as: MagadhServices)
 class LoginImp implements MagadhServices {
@@ -70,9 +71,12 @@ class LoginImp implements MagadhServices {
         url,
         headers: headers,
       );
+
+      var jsonResponse = jsonDecode(response.body);
+
       if (response.statusCode == 200) {
         final provider = Provider.of<DataProvider>(context!, listen: false);
-        var jsonResponse = jsonDecode(response.body);
+
         log(response.body);
         final result = UsersListModel.fromJson(jsonResponse);
         provider.getUserData(result);
@@ -126,12 +130,11 @@ class LoginImp implements MagadhServices {
   @override
   Future<Either<MainFailure, LoginVerifyModel>> verifyToken() async {
     try {
-      final uri = ApiEndPoint.loginVerify;
+      final uri = ApiEndPoint.verifyTOken;
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? accessToken = prefs.getString('access_token');
       final url = Uri.parse(uri);
       final headers = {
-        'Content-Type': 'application/json',
         'Authorization': 'Bearer $accessToken',
       };
 
@@ -144,6 +147,9 @@ class LoginImp implements MagadhServices {
         final result = LoginVerifyModel.fromJson(jsonResponse);
         final provider = Provider.of<DataProvider>(context!, listen: false);
         provider.getProfileData(result);
+        provider.latitude = provider.loginVerifyModel?.user?.location?.latitude;
+        provider.longitude =
+            provider.loginVerifyModel?.user?.location?.longitude;
         log(response.body);
         return Right(result);
       } else {
@@ -161,28 +167,58 @@ class LoginImp implements MagadhServices {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String? accessToken = prefs.getString('access_token');
       final url = Uri.parse(users);
-      String base64Image =
-          await convertImageToBase64(File(provider.imageFile?.path ?? ''));
+      // print(provider.imageFile?.path);
+      // String base64Image = await convertImageToBase64(provider.imageFile!);
+      // print(base64Image);
+      // Map<String, dynamic> data = {
+      //   "image": base64Image,
+      //   "location": {
+      //     "location": {"latitude": 0, "longitude": 0}
+      //   }
+      //   // Add other data you want to send in the request body
+      // };
+      var request = http.MultipartRequest('PATCH', url);
+      request.files.add(await http.MultipartFile.fromPath(
+        'image',
+        provider.imageFile?.path ?? '',
+        // filename: provider.imageFi, // Replace with your desired filename
+      ));
+      request.fields['location'] =
+          '{"location":{"latitude":${provider.latitude.toString()},"longitude":${provider.longitude.toString()}}}';
+      request.headers['Authorization'] = 'Bearer $accessToken';
 
-      Map<String, dynamic> data = {
-        "image": base64Image,
-        "location": {
-          "location": {"latitude": 0, "longitude": 0}
-        }
-        // Add other data you want to send in the request body
-      };
-      final headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $accessToken',
-      };
-
-      final response =
-          await http.patch(url, headers: headers, body: jsonEncode(data));
+      // Send the request and get the response
+      var res = await request.send();
+      final response = await http.Response.fromStream(res);
+      // final response =
+      //     await http.patch(url, headers: headers, body: jsonEncode(data));
+      print(response.body);
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
         final result = LoginVerifyModel.fromJson(jsonResponse);
+        PhoneNoController.phoneController.text = result.user?.phone ?? '';
+        PhoneNoController.otpController.clear();
 
-        provider.getProfileData(result);
+        await LoginImp().userLogin();
+        final loginRes = await LoginImp().userLogin();
+        loginRes.fold((failure) {}, (success) {
+          showTopSnackBar(
+            Overlay.of(context!),
+            SizedBox(
+              height: 50,
+              child: CustomSnackBar.success(
+                icon: const Icon(Icons.done),
+                iconRotationAngle: 0,
+                iconPositionLeft: 20,
+                iconPositionTop: -25,
+                message: success.otp.toString(),
+              ),
+            ),
+          );
+          Navigator.pushNamedAndRemoveUntil(
+              context!, Routes.otpScreen, (route) => false);
+        });
+        // provider.getProfileData(result);
         log(response.body);
         return Right(result);
       } else {

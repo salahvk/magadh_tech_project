@@ -79,8 +79,8 @@ class User {
 }
 
 class Location {
-  int? latitude;
-  int? longitude;
+  dynamic latitude;
+  dynamic longitude;
 
   Location({this.latitude, this.longitude});
 

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:magadh_tech/config/route_manager.dart';
+import 'package:magadh_tech/data/repositories/login_request.dart';
 import 'package:magadh_tech/utils/asset_manager.dart';
 import 'package:magadh_tech/utils/color_manager.dart';
 import 'package:magadh_tech/utils/style_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -20,17 +22,25 @@ class _SplashScreenState extends State<SplashScreen> {
 
   initFun() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      // final SharedPreferences prefs = await SharedPreferences.getInstance();
-      // final String? token = prefs.getString('access_token');
-      // final BuildContext myContext = context;
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      final BuildContext myContext = context;
       await Future.delayed(const Duration(seconds: 3));
-      // if (token == null) {
+      final userRes = await LoginImp(context: context).getUsers();
+      userRes.fold((failure) async {
+        await prefs.remove('access_token');
+      }, (success) {});
+
+      final String? token = prefs.getString('access_token');
+      print(token);
+      if (token == null) {
         Navigator.pushReplacementNamed(context, Routes.landingScreen);
-      // } else {
-      //   await FetchEmployeesData.getData(myContext);
-      //   await FetchDesignations.getData(myContext);
-      //   Navigator.pushReplacementNamed(context, Routes.homeScreen);
-      // }
+      } else {
+        await LoginImp(context: context).getUsers();
+
+        await LoginImp(context: context).verifyToken();
+        Navigator.pushReplacementNamed(context, Routes.homeScreen);
+      }
     });
   }
 
