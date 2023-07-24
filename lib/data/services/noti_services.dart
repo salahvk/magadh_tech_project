@@ -1,12 +1,15 @@
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:magadh_tech/presentation/screens/home_page.dart';
+import 'package:magadh_tech/utils/app.dart';
 
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  final _firebaseMessaging = FirebaseMessaging.instance;
+  // final _firebaseMessaging = FirebaseMessaging.instance;
   Future<void> initNotification() async {
     AndroidInitializationSettings initializationSettingsAndroid =
         const AndroidInitializationSettings('flutter_logo');
@@ -54,26 +57,19 @@ class NotificationService {
   }
 
   void handleNotificationClick(String? payload) {
-    // Check if payload is not null and handle the navigation accordingly
     if (payload != null) {
-      print(payload);
-      // For example, parse the payload JSON or handle data based on payload contents
       final data = parsePayload(payload);
 
       if (data != null) {
-        print(data);
-        // Navigate to the appropriate screen based on the data from the payload
-        // For example:
-        // navigatorKey.currentState?.push(
-        //   MaterialPageRoute(
-        //     builder: (context) => TargetScreen(data: data),
-        //   ),
-        // );
+        navigatorKey.currentState?.push(
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+        );
       }
     }
   }
 
-  // Helper method to parse the JSON payload if needed
   Map<String, dynamic>? parsePayload(String payload) {
     try {
       return jsonDecode(payload);
@@ -84,12 +80,7 @@ class NotificationService {
   }
 
   Future<void> handleBackgroundNotification(RemoteMessage message) async {
-    // Extract information from the notification payload
     final notificationData = message.data;
     print(notificationData);
-
-    // Handle the background notification here based on the payload data
-    // For example, you might want to navigate to a specific screen
-    // or update data in your app.
   }
 }

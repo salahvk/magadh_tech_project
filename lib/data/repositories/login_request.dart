@@ -38,12 +38,7 @@ class LoginImp implements MagadhServices {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
         final result = LoginRequestModel.fromJson(jsonResponse);
-        // final accessToken = jsonResponse["data"]["access_token"];
-        // print(accessToken);
-        // final SharedPreferences prefs = await SharedPreferences.getInstance();
-        // await prefs.setString('access_token', accessToken);
-        // await FetchEmployeesData.getData(context);
-        // await FetchDesignations.getData(context);
+
         log(response.body);
         return Right(result);
       } else {
@@ -80,12 +75,7 @@ class LoginImp implements MagadhServices {
         log(response.body);
         final result = UsersListModel.fromJson(jsonResponse);
         provider.getUserData(result);
-        // final accessToken = jsonResponse["data"]["access_token"];
-        // print(accessToken);
-        // final SharedPreferences prefs = await SharedPreferences.getInstance();
-        // await prefs.setString('access_token', accessToken);
-        // await FetchEmployeesData.getData(context);
-        // await FetchDesignations.getData(context);
+
         log(response.body);
         return Right(result);
       } else {
@@ -115,8 +105,7 @@ class LoginImp implements MagadhServices {
         // print(accessToken);
         final SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('access_token', accessToken ?? '');
-        // await FetchEmployeesData.getData(context);
-        // await FetchDesignations.getData(context);
+
         log(response.body);
         return Right(result);
       } else {
@@ -177,7 +166,6 @@ class LoginImp implements MagadhServices {
           '{"location":{"latitude":${provider.latitude.toString()},"longitude":${provider.longitude.toString()}}}';
       request.headers['Authorization'] = 'Bearer $accessToken';
 
-      // Send the request and get the response
       var res = await request.send();
       final response = await http.Response.fromStream(res);
 
